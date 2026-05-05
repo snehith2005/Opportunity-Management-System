@@ -13,34 +13,39 @@ ALLOWED_CATEGORIES = ["technology", "business", "design", "marketing", "data sci
 # ---------- SIGNUP ----------
 @main.route("/signup", methods=["POST"])
 def signup():
-    data = request.get_json()
+    try:
+        data = request.get_json()
+        print("DATA:", data)
 
-    if not all([data.get("full_name"), data.get("email"), data.get("password"), data.get("confirm_password")]):
-        return jsonify({"error": "All fields required"}), 400
+        if not all([data.get("full_name"), data.get("email"), data.get("password"), data.get("confirm_password")]):
+            return jsonify({"error": "All fields required"}), 400
 
-    if not re.match(r"[^@]+@[^@]+\.[^@]+", data["email"]):
-        return jsonify({"error": "Invalid email"}), 400
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", data["email"]):
+            return jsonify({"error": "Invalid email"}), 400
 
-    if data["password"] != data["confirm_password"]:
-        return jsonify({"error": "Passwords do not match"}), 400
+        if data["password"] != data["confirm_password"]:
+            return jsonify({"error": "Passwords do not match"}), 400
 
-    if len(data["password"]) < 8:
-        return jsonify({"error": "Password too short"}), 400
+        if len(data["password"]) < 8:
+            return jsonify({"error": "Password too short"}), 400
 
-    if Admin.query.filter_by(email=data["email"]).first():
-        return jsonify({"error": "Email already exists"}), 400
+        if Admin.query.filter_by(email=data["email"]).first():
+            return jsonify({"error": "Email already exists"}), 400
 
-    user = Admin(
-        full_name=data["full_name"],
-        email=data["email"],
-        password_hash=generate_password_hash(data["password"])
-    )
+        user = Admin(
+            full_name=data["full_name"],
+            email=data["email"],
+            password_hash=generate_password_hash(data["password"])
+        )
 
-    db.session.add(user)
-    db.session.commit()
+        db.session.add(user)
+        db.session.commit()
 
-    return jsonify({"message": "Signup successful"})
+        return jsonify({"message": "Signup successful"})
 
+    except Exception as e:
+        print("ERROR:", str(e))
+        return jsonify({"error": str(e)}), 500
 
 # ---------- LOGIN ----------
 @main.route("/login", methods=["POST"])
