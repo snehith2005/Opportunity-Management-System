@@ -15,6 +15,8 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = False   # True only for HTTPS
 
 db.init_app(app)
+with app.app_context():
+    db.create_all()
 CORS(app)
 
 login_manager = LoginManager()
@@ -37,5 +39,5 @@ def static_files(path):
 
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()   
-    app.run()
+        db.create_all()   # local only
+    app.run(debug=True)
