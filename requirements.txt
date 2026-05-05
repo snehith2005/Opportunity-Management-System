@@ -2,6 +2,5 @@ Flask
 gunicorn
 flask-login
 flask-cors
-pymysql
-sqlalchemy
 flask-sqlalchemy
+pymysql
