@@ -66,23 +66,34 @@ def login():
 # ---------- FORGOT PASSWORD ----------
 @main.route("/forgot-password", methods=["POST"])
 def forgot_password():
-    data = request.get_json()
+    try:
+        data = request.get_json()
+        user = Admin.query.filter_by(email=data.get("email")).first()
 
-    user = Admin.query.filter_by(email=data.get("email")).first()
+        if user:
+            token = secrets.token_urlsafe(32)
+            user.reset_token = token
+            user.reset_token_expiry = datetime.utcnow() + timedelta(hours=1)
+            db.session.commit()
 
-    if user:
-        token = secrets.token_urlsafe(32)
-        user.reset_token = token
-        user.reset_token_expiry = datetime.utcnow() + timedelta(hours=1)
-        db.session.commit()
-        print(f"RESET LINK: https://opportunity-management-system-1.onrender.com/reset-password/{token}")
+            reset_link = f"https://opportunity-management-system-2.onrender.com/reset-password/{token}"
 
-    return jsonify({
-    "message": "Reset link generated",
-    "reset_link": f"https://opportunity-management-system-1.onrender.com/reset-password/{token}"
-})
+            print("RESET LINK:", reset_link)
 
+            return jsonify({
+                "message": "Reset link generated",
+                "reset_link": reset_link
+            })
 
+        # ✅ IMPORTANT: handle user not found
+        return jsonify({
+            "message": "If email exists, reset link sent"
+        })
+
+    except Exception as e:
+        print("ERROR:", str(e))
+        return jsonify({"error": str(e)}), 500
+    
 @main.route("/reset-password/<token>", methods=["GET","POST"])
 def reset_password(token):
     admin = Admin.query.filter_by(reset_token=token).first()
@@ -113,6 +124,7 @@ def reset_password(token):
         <button type="submit">Reset Password</button>
     </form>
     """
+    
 
 
 # ---------- GET ALL ----------
