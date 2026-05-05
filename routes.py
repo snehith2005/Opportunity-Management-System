@@ -75,10 +75,12 @@ def forgot_password():
         user.reset_token = token
         user.reset_token_expiry = datetime.utcnow() + timedelta(hours=1)
         db.session.commit()
+        print(f"RESET LINK: https://opportunity-management-system-1.onrender.com/reset-password/{token}")
 
-        print(f"RESET LINK: http://127.0.0.1:5000/reset-password/{token}")
-
-    return jsonify({"message": "If email exists, reset link sent"})
+    return jsonify({
+    "message": "Reset link generated",
+    "reset_link": f"https://opportunity-management-system-1.onrender.com/reset-password/{token}"
+})
 
 
 @main.route("/reset-password/<token>", methods=["GET","POST"])
