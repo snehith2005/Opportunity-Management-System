@@ -3,4 +3,5 @@ gunicorn
 flask-login
 flask-cors
 flask-sqlalchemy
+sqlalchemy
 pymysql
