@@ -374,7 +374,7 @@ document.getElementById('opportunityModal').addEventListener('click', function(e
     const skills = skillsRaw.split(',').map(s => s.trim()).filter(Boolean).join(",");
 
     try {
-        const res = await fetch("http://127.0.0.1:5000/opportunities", {
+        const res = await fetch("/opportunities", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -650,7 +650,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     else if (captchaInput !== captchas.login) { showError('loginCaptchaErr','Captcha does not match. Please try again.'); valid = false; generateCaptcha('login'); }
 
     if (!valid) { shakeForm('loginForm'); return; }
-    fetch("http://127.0.0.1:5000/login", {
+    fetch("/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -696,7 +696,7 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
     if (!captchaInput) { showError('signupCaptchaErr','Please enter the captcha code'); valid = false; }
     else if (captchaInput !== captchas.signup) { showError('signupCaptchaErr','Captcha does not match.'); valid = false; generateCaptcha('signup'); }
     if (!valid) { shakeForm('signupForm'); return; }
-    fetch("http://127.0.0.1:5000/signup", {
+    fetch("/signup", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -778,7 +778,7 @@ window.addEventListener('resize', () => {
 });
 async function loadOpportunities() {
     try {
-        const res = await fetch("http://127.0.0.1:5000/opportunities", {
+        const res = await fetch("/opportunities", {
             method: "GET",
             credentials: "include"
         });
