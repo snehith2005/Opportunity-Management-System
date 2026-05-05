@@ -737,7 +737,7 @@ document.getElementById('forgotForm').addEventListener('submit', function(e) {
     else if (captchaInput !== captchas.forgot) { showError('forgotCaptchaErr','Captcha does not match.'); valid = false; generateCaptcha('forgot'); }
 
     if (!valid) { shakeForm('forgotForm'); return; }
-     fetch("http://127.0.0.1:5000/forgot-password",{
+     fetch("/forgot-password",{
         method: "POST",
         headers: {
             "Content-Type": "application/json"
