@@ -5,3 +5,4 @@ flask-cors
 flask-sqlalchemy
 cryptography
 pymysql
+psycopg2-binary
